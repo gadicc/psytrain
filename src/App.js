@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import './App.css';
+import Home from './Home';
+import Tattva from './Tattva';
 
 class App extends Component {
   render() {
     return (
-      <>
-        <CssBaseline />
-        <div className="App">
-          <header className="App-header">
-              Learn React
-            </a>
-          </header>
-        </div>
-      </>
+      <Router>
+        <>
+          <CssBaseline />
+          <Route path="/" exact component={Home} />
+          <Route path="/tattva" exact component={Tattva} />
+        </>
+      </Router>
     );
   }
 }
