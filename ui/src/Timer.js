@@ -42,7 +42,7 @@ function Timer({ length, chime, onDone }) {
     return () => clearInterval(handle);
   }, []);
 
-  const parsed = parseMsToUnits(diff);
+  const parsed = parseMsToUnits(diff+1000);
 
   return (
     <div>{parsed.h}:{parsed.m}:{parsed.s}</div>

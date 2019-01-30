@@ -94,8 +94,9 @@ export default function() {
       const length = stateRef.current.length;
       const diff = Date.now() - startTimeRef.current;
       const minutes = Math.floor((diff>length+1000 || diff<length ? diff : length) / (1000*60));
-      const doc = { exercise: 'tattva', mode: 'rotate', rotateTime, minutes };
+      const doc = { exercise: 'tattva', settings: { mode: 'rotate', rotateTime }, minutes };
       console.log(doc)
+      setLength(false);
     }
   );
 
@@ -119,6 +120,12 @@ export default function() {
       { length
         ?
           <div>
+            <Tone
+              audioContext={audioContext}
+              length={9999}
+              frequency={tattva.freq}
+              play={sound}
+            />
             <button onClick={() => stopAndSave()}>Stop and Save</button>
           </div>
         :
@@ -134,12 +141,6 @@ export default function() {
           onChange={ e => setSound(e.target.checked) } />
       </div>
 
-      <Tone
-        audioContext={audioContext}
-        length={9999}
-        frequency={tattva.freq}
-        play={sound}
-      />
       {
         length && <Timer length={length} />
       }

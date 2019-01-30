@@ -46,7 +46,10 @@ class Tone extends React.Component {
   }
 
   componentWillUnmount() {
-    this.oscillator.stop();
+    if (this.props.play)
+      this.oscillator.disconnect(this.gain);
+    if (this.isStarted)
+      this.oscillator.stop();
   }
 
   render() {
