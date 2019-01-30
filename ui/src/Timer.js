@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import chime from './bell';
+import playChime from './bell';
 
 // https://stackoverflow.com/a/33909506/1839099
 function parseMsToUnits(milliseconds) {
@@ -24,7 +24,7 @@ function parseMsToUnits(milliseconds) {
   return { h, m, s };
 }
 
-function Timer({ length }) {
+function Timer({ length, chime, onDone }) {
   const [ now, setNow ] = useState( () => Date.now() );
   const [ end ] = useState( () => now + length );
   const [ finished, setFinished ] = useState(false);
@@ -32,7 +32,9 @@ function Timer({ length }) {
   const diff = end - now;
   if (!finished && diff <= 0) {
     setFinished(true);
-    chime();
+
+    if (chime !== false)
+      playChime();
   }
 
   useEffect(() => {

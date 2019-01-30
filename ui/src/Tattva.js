@@ -63,25 +63,46 @@ export default function() {
   const [audioContext] = useState(() => new AudioContext());
   const [sound, setSound] = useState(false);
   const [length, setLength] = useState(false);
+  const [rotateTime] = useState(2000);
 
   const tattva = tattvas[i];
 
   const iRef = useRef();
   iRef.current = i;
 
+  const startTimeRef = useRef();
   const intervalRef = useRef();
 
   const start = useCallback(
     () => {
+      startTimeRef.current = Date.now();
       intervalRef.current = setInterval(
         () => setI(iRef.current+1 < tattvas.length ? iRef.current+1 : 0),
-        2000
+        rotateTime
       );
     },
     []
   );
 
   useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current) }, []);
+
+  const stateRef = useRef();
+
+  const stopAndSave = useCallback(
+    () => {
+      clearInterval(intervalRef.current);
+      const length = stateRef.current.length;
+      const diff = Date.now() - startTimeRef.current;
+      const minutes = Math.floor((diff>length+1000 || diff<length ? diff : length) / (1000*60));
+      const doc = { exercise: 'tattva', mode: 'rotate', rotateTime, minutes };
+      console.log(doc)
+    }
+  );
+
+  stateRef.current = { length };
+  useEffect(() => () => {
+    // if !saved then save
+  });
 
   return (
     <div>
@@ -95,11 +116,17 @@ export default function() {
 
       <div style={{ height: '100px'}} />
 
-      { !length &&
-        <div>
-          <button onClick={() => start() || setLength(5*1000*60)}>5m</button>
-          <button onClick={() => start() || setLength(10*1000*60)}>10m</button>
-        </div>
+      { length
+        ?
+          <div>
+            <button onClick={() => stopAndSave()}>Stop and Save</button>
+          </div>
+        :
+          <div>
+            <button onClick={() => start() || setLength(5*1000)}>5s</button>
+            <button onClick={() => start() || setLength(5*1000*60)}>5m</button>
+            <button onClick={() => start() || setLength(10*1000*60)}>10m</button>
+          </div>
       }
 
       <div>
