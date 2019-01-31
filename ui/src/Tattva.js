@@ -60,7 +60,6 @@ function Shape({ style }) {
 
 export default function() {
   const [i, setI] = useState(0);
-  const [audioContext] = useState(() => new AudioContext());
   const [sound, setSound] = useState(false);
   const [length, setLength] = useState(false);
   const [rotateTime] = useState(2000);
@@ -121,7 +120,6 @@ export default function() {
         ?
           <div>
             <Tone
-              audioContext={audioContext}
               length={9999}
               frequency={tattva.freq}
               play={sound}
