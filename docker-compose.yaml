@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+
+  api:
+    build: api
+    volumes:
+      - ./api:/home/node
+      - /home/dragon/www/projects/gongo/gongo-server:/home/node/node_modules/gongo-server
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "rs0" ]
+    volumes:
+      - ./local/mongo:/data/db

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from "react-router-dom";
+import gongo from "gongo-client";
+
 import Tone from "./Tone";
 import Timer from './Timer';
 
@@ -93,8 +95,18 @@ export default function() {
       const length = stateRef.current.length;
       const diff = Date.now() - startTimeRef.current;
       const minutes = Math.floor((diff>length+1000 || diff<length ? diff : length) / (1000*60));
-      const doc = { exercise: 'tattva', settings: { mode: 'rotate', rotateTime }, minutes };
+      const doc = {
+        exercise: 'tattva',
+        date: new Date(startTimeRef.current),
+        minutes,
+        settings: { mode: 'rotate', rotateTime }
+      };
       console.log(doc)
+
+      // TODO, if minutes>0, save && redirect, otherwise don't save and stay.
+
+      const result = gongo.collection('sessions').insert(doc);
+      console.log(result);
       setLength(false);
     }
   );
