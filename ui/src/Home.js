@@ -11,6 +11,8 @@ export default function() {
         <Link to="/tattva">tattva</Link>
         <br />
         <Link to="/sessions">sessions</Link>
+        <br />
+        <Link to="/timer">timer</Link>
       </div>
     </div>
   )
