@@ -1,10 +1,9 @@
-const { addBabelPlugin } = require("customize-cra");
+const { override, addBabelPlugin, addWebpackAlias } = require("customize-cra");
 const path = require("path");
 
-function override(config, env) {
-  return config;
-}
-
 module.exports = override(
-  addBabelPlugin('styled-jsx/babel')
+  addBabelPlugin('styled-jsx/babel'),
+  addWebpackAlias({
+    react: path.resolve('./node_modules/react')
+  })
 );

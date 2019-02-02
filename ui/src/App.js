@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import gongo from "gongo-client";
-import { useGongoLive, useGongoSub } from "gongo-react";
+import { gongo } from "gongo-react";
 
 import Home from './Home';
+import Sessions from './Sessions';
 import Tattva from './Tattva';
 
-gongo.connect(process.env.REACT_APP_GONGO_SERVER);
-
 window.gongo = gongo;
-window.sessions = gongo.collection('sessions');
-gongo.subscribe('sessions');
+gongo.connect(process.env.REACT_APP_GONGO_SERVER);
 
 class App extends Component {
   render() {
@@ -22,6 +19,7 @@ class App extends Component {
           <CssBaseline />
           <Route path="/" exact component={Home} />
           <Route path="/tattva" exact component={Tattva} />
+          <Route path="/sessions" exact component={Sessions} />
         </>
       </Router>
     );

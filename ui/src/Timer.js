@@ -24,6 +24,11 @@ function parseMsToUnits(milliseconds) {
   return { h, m, s };
 }
 
+const s = {
+  margin: '10px 20px 10px 20px',
+  fontSize: '150%',
+};
+
 function Timer({ length, chime, onDone }) {
   const [ now, setNow ] = useState( () => Date.now() );
   const [ end ] = useState( () => now + length );
@@ -45,7 +50,7 @@ function Timer({ length, chime, onDone }) {
   const parsed = parseMsToUnits(diff+1000);
 
   return (
-    <div>{parsed.h}:{parsed.m}:{parsed.s}</div>
+    <div style={s}>{parsed.h}:{parsed.m}:{parsed.s}</div>
   )
 }
 

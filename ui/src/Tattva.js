@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from "react-router-dom";
 import gongo from "gongo-client";
 
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+
+import AppBar from './AppBar';
 import Tone from "./Tone";
 import Timer from './Timer';
 
@@ -52,7 +58,13 @@ const tattvas = [
     freq: 126.22
   },
 
-]
+];
+
+const s = {
+  button: {
+    margin: '10px 5px 10px 5px'
+  }
+}
 
 export default function Tattva() {
   const [i, setI] = useState(0);
@@ -118,7 +130,7 @@ export default function Tattva() {
 
   return (
     <div>
-      <Link to="/">home</Link>
+      <AppBar title="Tattvas" />
 
       <div style={{ height: '100px'}} />
 
@@ -137,32 +149,28 @@ export default function Tattva() {
               frequency={tattva.freq}
               play={sound}
             />
-            <button onClick={() => stopAndSave()}>Stop and Save</button>
+            <Timer length={length} />
+            <Button variant="contained"
+              onClick={() => stopAndSave()}>Stop and Save</Button>
           </div>
         :
-          <>
-            <div>
-              <button onClick={() => start() || setLength(5*1000)}>5s</button>
-              <button onClick={() => start() || setLength(5*1000*60)}>5m</button>
-              <button onClick={() => start() || setLength(10*1000*60)}>10m</button>
-            </div>
-            <div>
-              <select value={mode} onChange={e => setMode(e.target.value)}>
-                <option value="static">static</option>
-                <option value="rotate">rotate</option>
-              </select>
-            </div>
-          </>
+          <div>
+            <Select value={mode} onChange={e => setMode(e.target.value)}>
+              <MenuItem value="rotate">Rotate</MenuItem>
+              <MenuItem value="static">Static</MenuItem>
+            </Select>
+            <Button style={s.button} variant="contained"
+              onClick={() => start() || setLength(5*1000*60)}>5m</Button>
+            <Button style={s.button} variant="contained"
+              onClick={() => start() || setLength(10*1000*60)}>10m</Button>
+          </div>
       }
 
       <div>
-        Sound: <input type="checkbox" checked={sound}
-          onChange={ e => setSound(e.target.checked) } />
+        <FormControlLabel label="Sound" control={
+          <Checkbox checked={sound} color="primary" onChange={ e => setSound(e.target.checked) } />
+        }/>
       </div>
-
-      {
-        length && <Timer length={length} />
-      }
     </div>
   )
 }

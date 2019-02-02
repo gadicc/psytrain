@@ -1,10 +1,17 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
+import AppBar from './AppBar';
+
 export default function() {
   return (
     <div>
-      <Link to="/tattva">tattva</Link>
+      <AppBar title="PsyTrain" />
+      <div>
+        <Link to="/tattva">tattva</Link>
+        <br />
+        <Link to="/sessions">sessions</Link>
+      </div>
     </div>
   )
 }
