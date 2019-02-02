@@ -54,17 +54,12 @@ const tattvas = [
 
 ]
 
-function Shape({ style }) {
-  return (
-    <div style={style} />
-  )
-}
-
-export default function() {
+export default function Tattva() {
   const [i, setI] = useState(0);
-  const [sound, setSound] = useState(false);
+  const [sound, setSound] = useState(true);
   const [length, setLength] = useState(false);
   const [rotateTime] = useState(2000);
+  const [mode, setMode] = useState('rotate');
 
   const tattva = tattvas[i];
 
@@ -77,10 +72,12 @@ export default function() {
   const start = useCallback(
     () => {
       startTimeRef.current = Date.now();
-      intervalRef.current = setInterval(
-        () => setI(iRef.current+1 < tattvas.length ? iRef.current+1 : 0),
-        rotateTime
-      );
+
+      if (stateRef.current.mode === 'rotate')
+        intervalRef.current = setInterval(
+          () => setI(iRef.current+1 < tattvas.length ? iRef.current+1 : 0),
+          rotateTime
+        );
     },
     []
   );
@@ -92,26 +89,29 @@ export default function() {
   const stopAndSave = useCallback(
     () => {
       clearInterval(intervalRef.current);
-      const length = stateRef.current.length;
+      const { length, mode } = stateRef.current;
       const diff = Date.now() - startTimeRef.current;
       const minutes = Math.floor((diff>length+1000 || diff<length ? diff : length) / (1000*60));
       const doc = {
         exercise: 'tattva',
         date: new Date(startTimeRef.current),
         minutes,
-        settings: { mode: 'rotate', rotateTime }
+        settings: { mode, rotateTime }
       };
       console.log(doc)
 
       // TODO, if minutes>0, save && redirect, otherwise don't save and stay.
 
-      const result = gongo.collection('sessions').insert(doc);
-      console.log(result);
+      if (minutes > 0) {
+        const result = gongo.collection('sessions').insert(doc);
+        console.log(result);
+      }
+
       setLength(false);
     }
   );
 
-  stateRef.current = { length };
+  stateRef.current = { length, mode };
   useEffect(() => () => {
     // if !saved then save
   });
@@ -123,7 +123,8 @@ export default function() {
       <div style={{ height: '100px'}} />
 
       <div style={{ textAlign: 'center' }}>
-        <Shape style={tattva.style} />
+        <div style={tattva.style}
+          onClick={ () => setI( i+1 < tattvas.length ? i + 1:0 ) } />
       </div>
 
       <div style={{ height: '100px'}} />
@@ -139,11 +140,19 @@ export default function() {
             <button onClick={() => stopAndSave()}>Stop and Save</button>
           </div>
         :
-          <div>
-            <button onClick={() => start() || setLength(5*1000)}>5s</button>
-            <button onClick={() => start() || setLength(5*1000*60)}>5m</button>
-            <button onClick={() => start() || setLength(10*1000*60)}>10m</button>
-          </div>
+          <>
+            <div>
+              <button onClick={() => start() || setLength(5*1000)}>5s</button>
+              <button onClick={() => start() || setLength(5*1000*60)}>5m</button>
+              <button onClick={() => start() || setLength(10*1000*60)}>10m</button>
+            </div>
+            <div>
+              <select value={mode} onChange={e => setMode(e.target.value)}>
+                <option value="static">static</option>
+                <option value="rotate">rotate</option>
+              </select>
+            </div>
+          </>
       }
 
       <div>
